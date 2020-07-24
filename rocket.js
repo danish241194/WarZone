@@ -11,7 +11,7 @@ export default class Rocket {
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.width = 4;
-    this.height = 20;
+    this.height = 15;
     this.angle = 0;
     this.position = {
       x1: this.gameWidth / 2 - this.width / 2,
@@ -32,6 +32,15 @@ export default class Rocket {
       this.rotation_degree,
       true
     );
+
+    if (
+      new_x.x < 0 ||
+      new_x.x > this.gameWidth ||
+      new_x.y < 0 ||
+      new_x.y > this.gameHeight
+    ) {
+      return;
+    }
     this.position.x2 = new_x.x;
     this.position.y2 = new_x.y;
   }
@@ -45,6 +54,14 @@ export default class Rocket {
       this.rotation_degree,
       false
     );
+    if (
+      new_x.x < 0 ||
+      new_x.x > this.gameWidth ||
+      new_x.y < 0 ||
+      new_x.y > this.gameHeight
+    ) {
+      return;
+    }
     this.position.x2 = new_x.x;
     this.position.y2 = new_x.y;
   }
@@ -63,16 +80,36 @@ export default class Rocket {
 
   draw() {
     if (this.state === ANIMATION_STATE) {
-      this.position.x2 += this.velX;
-      this.position.y2 += this.velY;
-      this.position.x1 += this.velX;
-      this.position.y1 += this.velY;
-      this.animation_target_time -= 2;
-      if (this.animation_target_time <= 5) {
-        this.state = INTERMEDIATE_STATE;
+      if (
+        this.position.x1 + this.velX >= 0 &&
+        this.position.x1 + this.velX + 10 <= this.gameWidth &&
+        this.position.y1 + this.velY >= 0 &&
+        this.position.y1 + this.velY + 10 <= this.gameHeight
+      ) {
+        this.position.x2 += this.velX;
+        this.position.y2 += this.velY;
+        this.position.x1 += this.velX;
+        this.position.y1 += this.velY;
+
+        if (this.position.x2 <= 0) {
+          this.position.x2 = this.position.x1 + 15;
+          this.position.y2 = this.position.y1;
+          this.state = STABLE_STATE;
+
+          //chnage needed
+        } else if (this.position.x2 + 15 >= this.gameWidth) {
+          console.log("yes");
+          this.position.x2 = this.position.x1 - 15;
+          this.position.y2 = this.position.y1;
+          this.ctx.fillRect(this.position.x2, this.position.y2, 50, 50);
+        }
+        this.animation_target_time -= 2;
+        if (this.animation_target_time <= 5) {
+          this.state = INTERMEDIATE_STATE;
+        }
       }
     } else if (this.state === INTERMEDIATE_STATE) {
-      this.animation_target_time -= 0.1;
+      this.animation_target_time -= 1;
 
       if (this.animation_target_time <= 0) {
         this.state = STABLE_STATE;
