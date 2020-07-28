@@ -5,28 +5,35 @@ let SPACE_BAR = 32;
 let LEFT_ARROW = 37;
 let RIGHT_ARROW = 39;
 
+let MAXIMUM_JUMP_TIME = 20;
 export default class InputHandler {
-  constructor(rocket_) {
+  constructor(player) {
     document.addEventListener("keydown", event => {
-      if (event.keyCode === LEFT_ARROW) {
-        rocket_.rotateLeft();
-      } else if (event.keyCode === RIGHT_ARROW) {
-        rocket_.rotateRight();
-      } else if (event.keyCode === SPACE_BAR) {
-        if (space_key_down_time >= 25) {
-          rocket_.shoot(25);
+      if (event.keyCode === SPACE_BAR) {
+        if (space_key_down_time >= MAXIMUM_JUMP_TIME) {
+          player.shoot(MAXIMUM_JUMP_TIME);
           space_key_down_time = 0;
           flag = false;
-        } else if (space_key_down_time <= 25 && flag) {
-          space_key_down_time += 1;
+        } else if (space_key_down_time <= MAXIMUM_JUMP_TIME && flag) {
+          space_key_down_time += 2;
         }
+      } else if (event.keyCode === LEFT_ARROW) {
+        player.rotateLeft();
+      } else if (event.keyCode === RIGHT_ARROW) {
+        player.rotateRight();
+      } else if (event.keyCode === 48) {
+        player.set_rocket(0);
+      } else if (event.keyCode === 49) {
+        player.set_rocket(1);
+      } else if (event.keyCode === 50) {
+        player.set_rocket(2);
       }
     });
 
     document.addEventListener("keyup", event => {
       if (event.keyCode === SPACE_BAR) {
         if (space_key_down_time > 0) {
-          rocket_.shoot(space_key_down_time);
+          player.shoot(space_key_down_time);
           space_key_down_time = 0;
         }
         flag = true;
