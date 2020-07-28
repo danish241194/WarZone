@@ -1,30 +1,22 @@
-import DirectionBox from "./direction";
-
 let STABLE_STATE = 1;
 let ANIMATION_STATE = 2;
 
 let ANIMATION_FRAME_SKIP = 5;
 export default class Rocket {
-  constructor(ctx, gameWidth, gameHeight) {
+  constructor(ctx, gameWidth, gameHeight, x, y, directionbox) {
+    this.image = document.getElementById("ball");
     this.ctx = ctx;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
 
     this.act_pos = {
-      x: this.gameWidth / 2 - 7,
-      y: this.gameHeight - 55
+      x: x,
+      y: y
     };
 
     this.state = STABLE_STATE;
-    this.direction = new DirectionBox(this.ctx, gameWidth, gameHeight);
-  }
-
-  rotateLeft() {
-    this.direction.rotateLeft();
-  }
-
-  rotateRight() {
-    this.direction.rotateRight();
+    this.direction = directionbox;
+    this.circle_fill_color = "green";
   }
 
   shoot(time) {
@@ -77,8 +69,25 @@ export default class Rocket {
         this.state = STABLE_STATE;
       }
     }
-    this.direction.draw(this.state);
 
-    this.ctx.fillRect(this.act_pos.x, this.act_pos.y, 10, 10);
+    this.draw_circle();
+  }
+  set_circle_color(color) {
+    this.circle_fill_color = color;
+  }
+  draw_circle() {
+    this.ctx.beginPath();
+    this.ctx.arc(
+      this.act_pos.x + 5,
+      this.act_pos.y + 5,
+      5,
+      0,
+      2 * Math.PI,
+      false
+    );
+    this.ctx.fillStyle = this.circle_fill_color;
+    this.ctx.fill();
+    this.ctx.strokeStyle = "#003300";
+    this.ctx.stroke();
   }
 }
