@@ -2,25 +2,20 @@ import { rotate } from "/src/utils";
 let STABLE_STATE = 1;
 let ANIMATION_FRAME_SKIP = 5;
 export default class DirectionBox {
-  constructor(ctx, gameWidth, gameHeight) {
+  constructor(ctx, gameWidth, gameHeight, width, x_y, dimensionbox) {
     this.ctx = ctx;
-    this.width = 4;
+    this.width = width;
     this.height = 15;
     this.gameWidth = gameWidth;
     this.gameHeight = gameHeight;
     this.position = {
-      x1: gameWidth / 2 - this.width / 2,
-      y1: gameHeight - 20,
-      x2: gameWidth / 2 - this.width / 2,
-      y2: gameHeight - this.height - 20
+      x1: x_y.x1,
+      y1: x_y.y1,
+      x2: x_y.x2,
+      y2: x_y.y2
     };
     this.rotation_degree = 10;
-    this.box_dimension = {
-      x: this.position.x1 - 20,
-      y: this.gameHeight - 40,
-      width: 40,
-      height: 40
-    };
+    this.box_dimension = dimensionbox;
   }
   rotateLeft() {
     let new_cord = rotate(
@@ -88,7 +83,8 @@ export default class DirectionBox {
     if (
       newx + 10 > this.box_dimension.x &&
       newx < this.box_dimension.x + this.box_dimension.width &&
-      newy + 10 > this.box_dimension.y
+      newy + 10 > this.box_dimension.y &&
+      newy < this.box_dimension.y + this.box_dimension.height
     ) {
       return true;
     }
@@ -99,6 +95,7 @@ export default class DirectionBox {
     velY = velY / ANIMATION_FRAME_SKIP;
     var result = { isColliding: false, x: 0, y: 0 };
     if (this.IsInsideBox(newx, newy)) {
+      console.log("yeser");
       result.isColliding = true;
       result.x = oldx;
       result.y = oldy;
