@@ -9,6 +9,8 @@ export default class Player {
     let direction_height = 15;
     var direction_x_y, box_dimension;
     if (pid === 1) {
+      this.circle_active_color = "blue";
+      this.circle_passive_color = "yellow";
       direction_x_y = {
         x1: GAME_WIDTH / 2 - direction_width / 2,
         y1: GAME_HEIGHT - 20,
@@ -22,6 +24,8 @@ export default class Player {
         height: 40
       };
     } else {
+      this.circle_active_color = "red";
+      this.circle_passive_color = "green";
       direction_x_y = {
         x1: GAME_WIDTH / 2 - direction_width / 2,
         y1: 20,
@@ -53,15 +57,20 @@ export default class Player {
         rockets_positions[i][1],
         this.directionbox
       );
+      rocket.set_circle_color(this.circle_passive_color);
       this.rockets.push(rocket);
     }
-    this.rockets[0].set_circle_color("red");
+    this.rockets[0].set_circle_color(this.circle_active_color);
   }
   set_rocket() {
-    this.rockets[this.current_rocket].set_circle_color("green");
+    this.rockets[this.current_rocket].set_circle_color(
+      this.circle_passive_color
+    );
     this.current_rocket += 1;
     this.current_rocket %= this.total_rockets;
-    this.rockets[this.current_rocket].set_circle_color("red");
+    this.rockets[this.current_rocket].set_circle_color(
+      this.circle_active_color
+    );
   }
   draw() {
     this.directionbox.draw(1);
